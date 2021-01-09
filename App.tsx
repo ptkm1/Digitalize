@@ -1,14 +1,26 @@
-import { StatusBar } from 'expo-status-bar';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
-import { Container, Texto } from './src/components/styleds/Layout';
+import { CidadaoProvider } from './src/store/AutContext';
+import Home from './src/telas/Home';
+import Upload from './src/telas/UploadCertidao/index';
+import UploadCertidao from './src/telas/UploadDocs';
+
+const Stack = createStackNavigator();
 
 
-
-export default function App() {
+function App() {
   return (
-    <Container>
-      <Texto>Open up App.tsx to start working on your app!</Texto>
-      <StatusBar style="dark" />
-    </Container>
+    <NavigationContainer>
+      <CidadaoProvider>
+        <Stack.Navigator initialRouteName="Home">
+          <Stack.Screen name="Home" component={Home} options={{headerShown: false}} />
+          <Stack.Screen name="UploadCertidao" component={UploadCertidao} />
+          <Stack.Screen name="Upload" component={Upload} />
+        </Stack.Navigator>
+      </CidadaoProvider>
+    </NavigationContainer>
   );
 }
+
+export default App;
