@@ -24,7 +24,7 @@ const Home: React.FC = ({ navigation }) => {
     de onde estiver
     </Descriçao>
 
-    <BotaoSemFundo top="90%" left="60%" onPress={ ()=>navigation.navigate('UploadCertidao') }>
+    <BotaoSemFundo top="90%" left="60%" onPress={ ()=>navigation.navigate('Documentos') }>
       <AntDesign name="arrowright" size={24} color="#fff" />
     </BotaoSemFundo>
 

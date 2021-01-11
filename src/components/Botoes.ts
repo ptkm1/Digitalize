@@ -10,6 +10,14 @@ export const BotaoSemFundo = styled.TouchableOpacity`
   top: ${ (prop:any) => prop.top || "5px"};
   left: ${ (prop:any) => prop.left || "5px"};
 `
-export const TextoBotaoSemFundo = styled.Text`
 
+
+export const BotãoOpcoes = styled.TouchableOpacity`
+  background: #FFFFFF;
+  width: 329px;
+  height: 125px;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  margin-bottom: 5%;
 `
