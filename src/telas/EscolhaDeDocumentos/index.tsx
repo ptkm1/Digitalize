@@ -5,7 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { BotãoOpcoes } from '../../components/Botoes';
 import { Container, Descriçao, Header, OpçoesBotoes } from '../Documentos/style';
 
-const SubmeterDocs: React.FC = ({ navigation }) => {
+const EscolhaDeDocumentos: React.FC = ({ navigation }) => {
 	return (
 		<Container>
 			<Header>
@@ -28,7 +28,7 @@ const SubmeterDocs: React.FC = ({ navigation }) => {
 							<Text>Certidao de nascimento</Text>
 						</BotãoOpcoes>
 
-						<BotãoOpcoes>
+						<BotãoOpcoes onPress={()=> navigation.navigate('NomeSocial')}>
 							<SvgUri
 								width="76"
 								height="73"
@@ -37,7 +37,7 @@ const SubmeterDocs: React.FC = ({ navigation }) => {
 							<Text>Nome social</Text>
 						</BotãoOpcoes>
 
-						<BotãoOpcoes>
+						<BotãoOpcoes onPress={()=> navigation.navigate('RelatorioMedico')}>
 							<SvgUri
 								width="76"
 								height="73"
@@ -46,7 +46,7 @@ const SubmeterDocs: React.FC = ({ navigation }) => {
 							<Text>Relatório médico</Text>
 						</BotãoOpcoes>
 
-						<BotãoOpcoes>
+						<BotãoOpcoes onPress={()=> navigation.navigate('TipagemSanguinea')}>
 							<SvgUri
 								width="76"
 								height="73"
@@ -61,4 +61,4 @@ const SubmeterDocs: React.FC = ({ navigation }) => {
 	);
 };
 
-export default SubmeterDocs;
+export default EscolhaDeDocumentos;

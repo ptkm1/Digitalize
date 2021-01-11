@@ -3,17 +3,18 @@ import { BarCodeScanner } from 'expo-barcode-scanner';
 import * as ImagePicker from 'expo-image-picker';
 import React, { useEffect, useState } from 'react';
 import { Button, Image, Modal, Platform, StyleSheet, Text } from 'react-native';
-import { BotãoOpcoes } from '../../components/Botoes';
+import { BotãoOpcoes } from '../../../components/Botoes';
 import { Container } from './style';
 
-const Certidao: React.FC = () => {
+const RelatorioMedico: React.FC = () => {
 
 	// TRATANDO O MODAL PARA ABRIR O LEITOR DE CODIGO DE BARRAS
 	const [modalVisible, setModalVisible] = useState(false);
 
 	// TRATANDO CAPTURA DE IMAGEM
 
-	const [image, setImage] = useState(null);
+	const [image, setImage] = useState<any>(null);
+	console.log(image)
 
 	useEffect(() => {
 		(async () => {
@@ -31,16 +32,18 @@ const Certidao: React.FC = () => {
 			mediaTypes: ImagePicker.MediaTypeOptions.All,
 			allowsEditing: true,
 			aspect: [4, 3],
-			quality: 1,
+			quality: 0.6,
 		});
 
 		if (!result.cancelled) {
-			setImage(result.uri);
+			setImage(result);
 		}
 	};
 
 	// TRATANDO CODIGO DE BARRAS
+
 	const [hasPermission, setHasPermission] = useState<any>(null);
+
 	useEffect(() => {
 		(async () => {
 			const { status } = await BarCodeScanner.requestPermissionsAsync();
@@ -53,10 +56,46 @@ const Certidao: React.FC = () => {
 
 	const CodigoEscaneado = ({ type, data }) => {
 		setScanned(true);
-		alert(`Codigo de barras com o tipo ${type} e conteudo ${data} has been scanned!`);
+		alert(`Codigo de barras com o tipo ${type} e conteudo ${data} escaneado com sucesso`);
 		setBarcode(data);
 	};
 
+
+	function createFormData(photo, body) {
+    const data = new FormData();
+
+    data.append('image', {
+      name: 'relatoriomedico.jpg',
+      type: image.type+'/jpg',
+      uri:
+        Platform.OS === 'android'
+          ? image.uri
+          : image.uri.replace('file://', ''),
+    });
+
+    Object.keys(body).forEach(key => {
+      data.append(key, body[key]);
+		});
+
+    return data;
+	}
+
+	function uploadImage() {
+    // IP servidor WEBLINK: 31.220.48.33
+
+    fetch('http://192.168.0.107:3333/cidadao/submeterrelatoriomedico', {
+      method: 'PATCH',
+      body: createFormData(image, { barcode: barcode }) })
+      .then(response => {
+        alert('Upload feito com sucesso!');
+      })
+      .catch(error => {
+				console.log(error)
+        alert('Falha no upload');
+      });
+  }
+
+	// Verificando se foi permitido ou não o uso da camera
 	if (hasPermission === null) {
 		return <Text>Requesting for camera permission</Text>;
 	}
@@ -66,7 +105,7 @@ const Certidao: React.FC = () => {
 
 	return (
 		<Container>
-			{image && <Image source={{ uri: image }} style={{ width: 230, height: 230 }} />}
+			{image && <Image source={{ uri: image.uri }} style={{ width: 230, height: 230 }} />}
 
 			<Modal
 				animationType="slide"
@@ -94,15 +133,15 @@ const Certidao: React.FC = () => {
 				{scanned && <Button title={'Escanear de novo'} onPress={ () => setScanned(false) } />}
 			</Modal>
 
-			{barcode ? <Text>{barcode}</Text> : <Text></Text>}
+			{barcode ? <Text>{ barcode }</Text> : <Text></Text>}
 
 
 			<BotãoOpcoes
 				onPress={() => { setModalVisible(!modalVisible) }}	>
         { image ?(
-         <AntDesign name="barcode" size={20} />
-        ) : (
-          <AntDesign name="check" size={20} color="green" />
+         <AntDesign name="check" size={33} color="green" />
+				 ) : (
+				 <AntDesign name="camera" size={33} />
         ) }
 
 				<Text>Verificar Barcode</Text>
@@ -110,15 +149,15 @@ const Certidao: React.FC = () => {
 
       <BotãoOpcoes onPress={PegarImagem}>
 				{ image ?(
-          <AntDesign name="camera" size={20} />
-        ) : (
-          <AntDesign name="check" size={20} color="green" />
+					<AntDesign name="check" size={33} color="green" />
+					) : (
+          <AntDesign name="camera" size={33} />
         ) }
 				<Text>Tirar foto do documento</Text>
 			</BotãoOpcoes>
 
       { image && barcode ? (
-        <BotãoOpcoes onPress={()=>{}}>
+        <BotãoOpcoes onPress={()=>uploadImage()}>
           <Text>Upar</Text>
         </BotãoOpcoes>
       ) : (
@@ -132,4 +171,4 @@ const Certidao: React.FC = () => {
 	);
 };
 
-export default Certidao;
+export default RelatorioMedico;

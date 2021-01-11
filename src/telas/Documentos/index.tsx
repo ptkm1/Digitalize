@@ -18,7 +18,7 @@ const Documentos: React.FC = ({ navigation }) => {
 					<Text>Pesquisar por Documentos</Text>
 				</BotãoOpcoes>
 
-				<BotãoOpcoes>
+				<BotãoOpcoes onPress={ () => navigation.navigate('VerDocumentos') } >
 					<SvgUri
 						width="76"
 						height="73"
