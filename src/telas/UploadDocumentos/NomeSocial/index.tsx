@@ -1,16 +1,15 @@
 import { AntDesign } from '@expo/vector-icons';
-import { BarCodeScanner } from 'expo-barcode-scanner';
 import * as ImagePicker from 'expo-image-picker';
-import React, { useEffect, useState } from 'react';
-import { Button, Image, Modal, Platform, StyleSheet, Text } from 'react-native';
+import React, { useContext, useEffect, useState } from 'react';
+import { Image, Platform, Text } from 'react-native';
 import { BotãoOpcoes } from '../../../components/Botoes';
+import CidadaoContext from '../../../store/AutContext';
 import { Container } from './style';
 
 const NomeSocial: React.FC = () => {
 
-	// TRATANDO O MODAL PARA ABRIR O LEITOR DE CODIGO DE BARRAS
-	const [modalVisible, setModalVisible] = useState(false);
 
+	const { barcode: bcode } = useContext(CidadaoContext)
 	// TRATANDO CAPTURA DE IMAGEM
 
 	const [image, setImage] = useState<any>(null);
@@ -40,26 +39,6 @@ const NomeSocial: React.FC = () => {
 		}
 	};
 
-	// TRATANDO CODIGO DE BARRAS
-
-	const [hasPermission, setHasPermission] = useState<any>(null);
-
-	useEffect(() => {
-		(async () => {
-			const { status } = await BarCodeScanner.requestPermissionsAsync();
-			setHasPermission(status === 'granted');
-		})();
-	}, []);
-
-	const [scanned, setScanned] = useState(false);
-	const [barcode, setBarcode] = useState(null);
-
-	const CodigoEscaneado = ({ type, data }) => {
-		setScanned(true);
-		alert(`Codigo de barras com o tipo ${type} e conteudo ${data} escaneado com sucesso`);
-		setBarcode(data);
-	};
-
 
 	function createFormData(photo, body) {
     const data = new FormData();
@@ -83,9 +62,9 @@ const NomeSocial: React.FC = () => {
 	function uploadImage() {
     // IP servidor WEBLINK: 31.220.48.33
 
-    fetch('http://192.168.0.107:3333/cidadao/submeternomesocial', {
+    fetch('http://192.168.0.103:3333/cidadao/submeternomesocial', {
       method: 'PATCH',
-      body: createFormData(image, { barcode: barcode }) })
+      body: createFormData(image, { barcode: bcode }) })
       .then(response => {
         alert('Upload feito com sucesso!');
       })
@@ -95,78 +74,27 @@ const NomeSocial: React.FC = () => {
       });
   }
 
-	// Verificando se foi permitido ou não o uso da camera
-	if (hasPermission === null) {
-		return <Text>Requesting for camera permission</Text>;
-	}
-	if (hasPermission === false) {
-		return <Text>No access to camera</Text>;
-	}
-
 	return (
 		<Container>
 			{image && <Image source={{ uri: image.uri }} style={{ width: 230, height: 230 }} />}
 
-			<Modal
-				animationType="slide"
-				transparent={true}
-				visible={modalVisible}
-				onRequestClose={ () => setModalVisible(false) }
-			>
-				{barcode ? (
-					<BotãoOpcoes
-						style={{ zIndex: 15 }}
-						onPress={() => {
-							setModalVisible(!modalVisible);
-						}}
-					>
-						<Text>FecharModal </Text>
-					</BotãoOpcoes>
-				) : (
-					<Text>Verifique algum codigo</Text>
-				)}
-
-				<BarCodeScanner
-					onBarCodeScanned={scanned ? undefined : CodigoEscaneado}
-					style={StyleSheet.absoluteFillObject}
-				/>
-				{scanned && <Button title={'Escanear de novo'} onPress={ () => setScanned(false) } />}
-			</Modal>
-
-			{barcode ? <Text>{ barcode }</Text> : <Text></Text>}
+			{bcode ? <Text>{bcode}</Text> : <Text></Text>}
 
 
-			<BotãoOpcoes
-				onPress={() => { setModalVisible(!modalVisible) }}	>
-        { image ?(
-         <AntDesign name="check" size={33} color="green" />
-				 ) : (
-				 <AntDesign name="camera" size={33} />
-        ) }
-
-				<Text>Verificar Barcode</Text>
-			</BotãoOpcoes>
-
-      <BotãoOpcoes onPress={PegarImagem}>
-				{ image ?(
-					<AntDesign name="check" size={33} color="green" />
-					) : (
-          <AntDesign name="camera" size={33} />
-        ) }
+			<BotãoOpcoes onPress={PegarImagem}>
+				{image ? <AntDesign name="camera" size={33} /> : <AntDesign name="check" size={33} color="green" />}
 				<Text>Tirar foto do documento</Text>
 			</BotãoOpcoes>
 
-      { image && barcode ? (
-        <BotãoOpcoes onPress={()=>uploadImage()}>
-          <Text>Upar</Text>
-        </BotãoOpcoes>
-      ) : (
-        <BotãoOpcoes onPress={()=>{}} disabled >
-          <Text>Upar</Text>
-        </BotãoOpcoes>
-      ) }
-
-
+			{image && bcode ? (
+				<BotãoOpcoes onPress={() => uploadImage()}>
+					<Text>Upar</Text>
+				</BotãoOpcoes>
+			) : (
+				<BotãoOpcoes onPress={() => {}} disabled>
+					<Text>Upar</Text>
+				</BotãoOpcoes>
+			)}
 		</Container>
 	);
 };

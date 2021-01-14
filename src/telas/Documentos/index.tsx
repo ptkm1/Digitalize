@@ -15,7 +15,7 @@ const Documentos: React.FC = ({ navigation }) => {
 			<OpçoesBotoes>
 				<BotãoOpcoes onPress={ () => navigation.navigate('SubmeterDocs') } >
 					<SvgUri width="76" height="73" source={require('../../../assets/opcoes1/verdocumentos.svg')} />
-					<Text>Pesquisar por Documentos</Text>
+					<Text>Inserir Documentos</Text>
 				</BotãoOpcoes>
 
 				<BotãoOpcoes onPress={ () => navigation.navigate('VerDocumentos') } >
