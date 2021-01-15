@@ -59,7 +59,7 @@ const EscolhaDeDocumentos: React.FC = ({ navigation }) => {
 	//Variaveis de cadastro
 
 	const [nome,setNome] = useState<any>()
-	const [email,setEmail] = useState<any>()
+	const [rg,setRg] = useState<any>()
 	const [telefone,setTelefone] = useState<any>()
 
 
@@ -69,7 +69,7 @@ const EscolhaDeDocumentos: React.FC = ({ navigation }) => {
 		const dados:any =
 		{	id: barcode,
 			nome: nome,
-			email: email,
+			rg: rg,
 			telefone: telefone}
 
 			try {
@@ -95,7 +95,7 @@ const EscolhaDeDocumentos: React.FC = ({ navigation }) => {
 			>
 				<View style={{ width: "100%", height: "100%", backgroundColor: "#fff", zIndex: 510 }}>
 					<TextInput onChangeText={ (e)=>setNome(e) } placeholder="Digite o nome" />
-					<TextInput onChangeText={ (e) => setEmail(e) } placeholder="Digite o email" />
+					<TextInput onChangeText={ (e) => setRg(e) } placeholder="Digite o RG" />
 					<TextInput onChangeText={ (e) => setTelefone(e) } placeholder="Digite o telefone" />
 
 					<Button title="Cadastre o usuario" onPress={CadastrarNovoCidadao} />

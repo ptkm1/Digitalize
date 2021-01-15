@@ -1,7 +1,7 @@
 import { AntDesign } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import React, { useContext, useEffect, useState } from 'react';
-import { Image, Platform, Text } from 'react-native';
+import { Button, Image, Modal, Platform, Text, TouchableOpacity } from 'react-native';
 import { BotãoOpcoes } from '../../../components/Botoes';
 import CidadaoContext from '../../../store/AutContext';
 import { Container } from './style';
@@ -29,9 +29,9 @@ const Certidao: React.FC = () => {
 	const PegarImagem = async () => {
 		let result: any = await ImagePicker.launchCameraAsync({
 			mediaTypes: ImagePicker.MediaTypeOptions.All,
-			allowsEditing: true,
+			allowsEditing: false,
 			aspect: [4, 3],
-			quality: 0.6,
+			quality: 0.4,
 		});
 
 		if (!result.cancelled) {
@@ -75,11 +75,24 @@ const Certidao: React.FC = () => {
       });
   }
 
+	//Model
+	const [modalVisible, setModalVisible] = useState(false);
+
 	return (
 		<Container>
-			{image && <Image source={{ uri: image.uri }} style={{ width: 230, height: 230 }} />}
+			{image && <Modal
+				animationType="slide"
+				transparent={true}
+				visible={modalVisible}
+				onRequestClose={ () => setModalVisible(false) }
+			>
+				<Button title="Fechar" onPress={ () => setModalVisible(false) } />
+				<Image source={{ uri: image.uri }} resizeMode="stretch" style={{ width: "100%", height: "100%" }} />
+			</Modal> }
 
-			{bcode ? <Text>{bcode}</Text> : <Text></Text>}
+			{image && (<TouchableOpacity  onPress={ ()=> setModalVisible(!modalVisible) }><Image source={{ uri: image.uri }} style={{ width: 350, height: 380 }} /></TouchableOpacity>)}
+
+			{bcode ? <Text>{bcode} - Certidão de Nascimento</Text> : <Text></Text>}
 
 
 			<BotãoOpcoes onPress={PegarImagem}>
