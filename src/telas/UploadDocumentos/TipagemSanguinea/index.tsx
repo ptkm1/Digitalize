@@ -72,15 +72,13 @@ const TipagemSanguinea: React.FC = () => {
         alert('Falha no upload');
       });
 	}
-	
 		//Model
 		const [modalVisible, setModalVisible] = useState(false);
 
 	return (
 		<Container>
-			
-			
-			{image && <Modal
+
+			{ image && <Modal
 				animationType="slide"
 				transparent={true}
 				visible={modalVisible}
