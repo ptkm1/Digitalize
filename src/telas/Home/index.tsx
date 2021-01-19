@@ -20,8 +20,7 @@ const Home: React.FC = ({ navigation }) => {
     />
     <Titulo>Digitalize</Titulo>
     <Descriçao width="60%">
-    Atualize seus documentos
-    de onde estiver
+    Insira os documentos Opcionais
     </Descriçao>
 
     <BotaoSemFundo top="90%" left="60%" onPress={ ()=>navigation.navigate('Documentos') }>
